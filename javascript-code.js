@@ -46,26 +46,35 @@
         }
 
         function toggleRemoveMode(workspaceIndex) {
+        
             const index = workspaceIndex - 1;
             isRemovingVertex[index] = !isRemovingVertex[index];
             const btn = document.querySelector(`#workspace${workspaceIndex} button:nth-child(2)`);
             btn.textContent = isRemovingVertex[index] ? 'Cancel Remove' : 'Remove Vertex';
             workspaces[index].canvas.style.cursor = isRemovingVertex[index] ? 'not-allowed' : 'default';
+            
         }
 
-        function generateMatrix(workspaceIndex) {
+        function generateList(workspaceIndex) {
             const workspace = workspaces[workspaceIndex - 1];
-            const vertexCount = workspace.vertices.length;
-            const adjacencyMatrix = Array(vertexCount).fill().map(() => Array(vertexCount).fill(0));
-            workspace.edges.forEach(([start, end]) => {
-                adjacencyMatrix[start][end] = 1;
-                adjacencyMatrix[end][start] = 1;
+            const adjacencyList = [];
+        
+            workspace.vertices.forEach((vertex, index) => {
+                const neighbors = [];
+                workspace.edges.forEach(edge => {
+                    if (edge[0] === index) {
+                        neighbors.push(edge[1] + 1);
+                    } else if (edge[1] === index) {
+                        neighbors.push(edge[0] + 1);
+                    }
+                });
+                adjacencyList.push(`${index + 1} ${neighbors.join(' ')}`);
             });
-
-            const matrixString = vertexCount + '\n' + adjacencyMatrix.map(row => row.join(' ')).join('\n');
-            const blob = new Blob([matrixString], { type: 'text/plain' });
+        
+            const listString = adjacencyList.join('\n');
+            const blob = new Blob([listString], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
-
+        
             const a = document.createElement('a');
             a.href = url;
             a.download = workspace.fileName;
