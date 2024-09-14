@@ -13,6 +13,7 @@ vector<int> findTreeCenters(const map<int, vector<int>>& adjList) {
     unordered_map<int, int> degree;
     unordered_set<int> nodes;
     queue<int> leaves;
+    int n = adjList.size();
 
     // Calculate initial degrees and collect all nodes
     for (const auto& pair : adjList) {
