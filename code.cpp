@@ -32,14 +32,18 @@ string label_tree(int node, map<int, vector<int>>& rootedAdjList) {
     // Combine the sorted labels to form a label for the current node
     string combinedLabel = "(";
     for (const string& label : childLabels) {
-        combinedLabel += label;
+        combinedLabel += label + ",";
+    }
+    
+    // Remove the last comma and close the parentheses
+    if (!childLabels.empty()) {
+        combinedLabel.pop_back(); // Remove the last comma
     }
     combinedLabel += ")";
     
     // Return the label for the current node
     return combinedLabel;
 }
-
 
 map<int, vector<int>> root_tree(map<int, vector<int>>& adjList, int root ) {
     // Select the first center (you could modify this for multiple centers)
@@ -206,11 +210,17 @@ int main() {
              rootedTree2 = root_tree(adjList2, centers2[0]);
              rootedTree3 = root_tree(adjList1, centers1[1]);
              rootedTree4 = root_tree(adjList2, centers2[1]);
+             printAdjacencyList(rootedTree2, "3");
+             printAdjacencyList(rootedTree3, "3");
+             printAdjacencyList(rootedTree4, "3");
             treeLabel1 = label_tree(centers1[0], rootedTree1);
             treeLabel2 = label_tree(centers2[0], rootedTree2);
             treeLabel3 = label_tree(centers1[1], rootedTree1);
             treeLabel4 = label_tree(centers2[1], rootedTree2);
-
+   cout << "Labeled Tree: " << treeLabel1 << endl;
+     cout << "Labeled Tree: " << treeLabel2 << endl;
+        cout << "Labeled Tree: " << treeLabel3 << endl;
+     cout << "Labeled Tree: " << treeLabel4 << endl;
 
     }
         else if(centers1.size()==2 && centers2.size()==1 ){
