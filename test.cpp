@@ -5,14 +5,45 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include<algorithm>
 #include <unordered_set>
 #include <unordered_map>
 #include <set>
 
 using namespace std;
-map<int, vector<int>> root_tree(map<int, vector<int>>& adjList, vector<int>& centers) {
+
+string label_tree(int node, map<int, vector<int>>& rootedAdjList) {
+    // If the node has no children (leaf), assign base label "0"
+    if (rootedAdjList[node].empty()) {
+        return "0";
+    }
+    
+    // Vector to store labels of children
+    vector<string> childLabels;
+    
+    // Recursively get the labels of children
+    for (int child : rootedAdjList[node]) {
+        childLabels.push_back(label_tree(child, rootedAdjList));
+    }
+    
+    // Sort the children's labels lexicographically
+    sort(childLabels.begin(), childLabels.end());
+    
+    // Combine the sorted labels to form a label for the current node
+    string combinedLabel = "(";
+    for (const string& label : childLabels) {
+        combinedLabel += label;
+    }
+    combinedLabel += ")";
+    
+    // Return the label for the current node
+    return combinedLabel;
+}
+
+
+map<int, vector<int>> root_tree(map<int, vector<int>>& adjList, int root ) {
     // Select the first center (you could modify this for multiple centers)
-    int root = centers[0];
+    
     
     // Map to store the rooted adjacency list
     map<int, vector<int>> rootedAdjList;
@@ -155,8 +186,70 @@ int main() {
         cout << center << " ";
     }
     cout << endl;
-     map<int, vector<int>> rootedTree1 = root_tree(adjList1, centers1);
-     printAdjacencyList(rootedTree1, "3");
+
+    map<int, vector<int>> rootedTree1, rootedTree2, rootedTree3, rootedTree4;
+    string treeLabel1, treeLabel2 , treeLabel3,treeLabel4;
+    if(centers1.size()==1 && centers2.size()==1 ){
+          rootedTree1 = root_tree(adjList1, centers1[0]);
+          rootedTree2 = root_tree(adjList2, centers2[0]);
+          treeLabel1 = label_tree(centers1[0], rootedTree1);
+          treeLabel2 = label_tree(centers2[0], rootedTree2);
+          
+
+
+
+
+
+    }
+      else if(centers1.size()==2 && centers2.size()==2 ){
+             rootedTree1 = root_tree(adjList1, centers1[0]);
+             rootedTree2 = root_tree(adjList2, centers2[0]);
+             rootedTree3 = root_tree(adjList1, centers1[1]);
+             rootedTree4 = root_tree(adjList2, centers2[1]);
+            treeLabel1 = label_tree(centers1[0], rootedTree1);
+            treeLabel2 = label_tree(centers2[0], rootedTree2);
+            treeLabel3 = label_tree(centers1[1], rootedTree1);
+            treeLabel4 = label_tree(centers2[1], rootedTree2);
+
+
+    }
+        else if(centers1.size()==2 && centers2.size()==1 ){
+             rootedTree1 = root_tree(adjList1, centers1[0]);
+             rootedTree2 = root_tree(adjList2, centers2[0]);
+             rootedTree3 = root_tree(adjList1, centers1[1]);
+              treeLabel1 = label_tree(centers1[0], rootedTree1);
+            treeLabel2 = label_tree(centers2[0], rootedTree2);
+            treeLabel3 = label_tree(centers1[1], rootedTree1);
+           
+    
+
+
+    }
+        else if(centers1.size()==1 && centers2.size()==2 ){
+             rootedTree1 = root_tree(adjList1, centers1[0]);
+             rootedTree2 = root_tree(adjList2, centers2[0]);
+             rootedTree4 = root_tree(adjList2, centers2[1]);
+              treeLabel1 = label_tree(centers1[0], rootedTree1);
+            treeLabel2 = label_tree(centers2[0], rootedTree2);
+            treeLabel4 = label_tree(centers2[1], rootedTree2);
+
+
+    }
+    printAdjacencyList(rootedTree1, "3");
+
+     cout << "Labeled Tree: " << treeLabel1 << endl;
+     cout << "Labeled Tree: " << treeLabel2 << endl;
+     
+     if((treeLabel1==treeLabel2)||(treeLabel1==treeLabel4) || (treeLabel3==treeLabel2) ){
+     cout<<"TREES ARE ISOMORPHIC";
+     }
+     else{
+        cout<<"NOT ISOMORHIC";
+     }
+     
+
+     
+     
 
 
     return 0;
