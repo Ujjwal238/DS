@@ -150,7 +150,7 @@ void printAdjacencyList(const map<int, vector<int>>& adjList, const string& list
  for (const auto& pair : adjList) {
         cout << pair.first << ": ";
         if (pair.second.empty()) {
-            cout << "None";  // If the node has no children, print "None"
+            cout << "None";  
         } else {
             for (size_t i = 0; i < pair.second.size(); ++i) {
                 cout << pair.second[i];
