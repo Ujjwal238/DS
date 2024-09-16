@@ -13,69 +13,64 @@
 using namespace std;
 
 string label_tree(int node, map<int, vector<int>>& rootedAdjList) {
-    // If the node has no children (leaf), assign base label "0"
+  
     if (rootedAdjList[node].empty()) {
         return "0";
     }
     
-    // Vector to store labels of children
+   
     vector<string> childLabels;
     
-    // Recursively get the labels of children
+
     for (int child : rootedAdjList[node]) {
         childLabels.push_back(label_tree(child, rootedAdjList));
     }
     
-    // Sort the children's labels lexicographically
+
     sort(childLabels.begin(), childLabels.end());
     
-    // Combine the sorted labels to form a label for the current node
+   
     string combinedLabel = "(";
     for (const string& label : childLabels) {
         combinedLabel += label + ",";
     }
-    
-    // Remove the last comma and close the parentheses
+
     if (!childLabels.empty()) {
-        combinedLabel.pop_back(); // Remove the last comma
+        combinedLabel.pop_back(); 
     }
     combinedLabel += ")";
     
-    // Return the label for the current node
+
     return combinedLabel;
 }
 
 map<int, vector<int>> root_tree(map<int, vector<int>>& adjList, int root ) {
-    // Select the first center (you could modify this for multiple centers)
-    
-    
-    // Map to store the rooted adjacency list
+
     map<int, vector<int>> rootedAdjList;
     
-    // Set to track visited nodes
     set<int> visited;
     
-    // Use a queue for BFS or DFS
+   
     queue<int> q;
     q.push(root);
     visited.insert(root);
     
-    // Perform BFS to create a rooted tree
+  
     while (!q.empty()) {
         int node = q.front();
         q.pop();
         
-        // Traverse all neighbors (children)
+        
         for (int neighbor : adjList[node]) {
             if (visited.find(neighbor) == visited.end()) {
-                // If the neighbor is not visited, it becomes a child of the current node
+                
                 rootedAdjList[node].push_back(neighbor);
                 visited.insert(neighbor);
                 q.push(neighbor);
             }
         }
             if (rootedAdjList.find(node) == rootedAdjList.end()) {
-            rootedAdjList[node] = {};  // Add node with empty children list
+            rootedAdjList[node] = {}; 
         }
     
     }
@@ -88,7 +83,7 @@ vector<int> findTreeCenters(const map<int, vector<int>>& adjList) {
     queue<int> leaves;
     int n = adjList.size();
 
-    // Calculate initial degrees and collect all nodes
+   
     for (const auto& pair : adjList) {
         int node = pair.first;
         degree[node] = pair.second.size();
@@ -110,7 +105,7 @@ vector<int> findTreeCenters(const map<int, vector<int>>& adjList) {
             leaves.pop();
             nodes.erase(leaf);
 
-            // Decrease degree of the leaf's neighbors
+            
             for (int neighbor : adjList.at(leaf)) {
                 if (nodes.count(neighbor) > 0) {
                     degree[neighbor]--;
@@ -122,7 +117,6 @@ vector<int> findTreeCenters(const map<int, vector<int>>& adjList) {
         }
     }
 
-    // The remaining nodes are the centers
     return vector<int>(nodes.begin(), nodes.end());
 }
 
