@@ -204,18 +204,25 @@ int main() {
              rootedTree2 = root_tree(adjList2, centers2[0]);
              rootedTree3 = root_tree(adjList1, centers1[1]);
              rootedTree4 = root_tree(adjList2, centers2[1]);
-             printAdjacencyList(rootedTree2, "3");
+             printAdjacencyList(rootedTree1, "1");
+             treeLabel1 = label_tree(centers1[0], rootedTree1);
+              cout << "Labeled Tree1: " << treeLabel1 << endl;
              printAdjacencyList(rootedTree3, "3");
-             printAdjacencyList(rootedTree4, "3");
-            treeLabel1 = label_tree(centers1[0], rootedTree1);
+             treeLabel3 = label_tree(centers1[1], rootedTree1);
+             cout << "Labeled Tree3: " << treeLabel3 << endl;
+             printAdjacencyList(rootedTree2, "2");
             treeLabel2 = label_tree(centers2[0], rootedTree2);
-            treeLabel3 = label_tree(centers1[1], rootedTree1);
+            cout << "Labeled Tree2: " << treeLabel2 << endl;
+             printAdjacencyList(rootedTree4, "4");
             treeLabel4 = label_tree(centers2[1], rootedTree2);
-   cout << "Labeled Tree: " << treeLabel1 << endl;
-     cout << "Labeled Tree: " << treeLabel2 << endl;
-        cout << "Labeled Tree: " << treeLabel3 << endl;
-     cout << "Labeled Tree: " << treeLabel4 << endl;
+           
+            cout << "Labeled Tree4: " << treeLabel4 << endl;
 
+            
+  
+     
+        
+     
     }
         else if(centers1.size()==2 && centers2.size()==1 ){
              rootedTree1 = root_tree(adjList1, centers1[0]);
@@ -239,7 +246,7 @@ int main() {
 
 
     }
-    printAdjacencyList(rootedTree1, "3");
+    printAdjacencyList(rootedTree1, "1");
 
      cout << "Labeled Tree: " << treeLabel1 << endl;
      cout << "Labeled Tree: " << treeLabel2 << endl;
