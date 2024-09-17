@@ -12,37 +12,40 @@
 
 using namespace std;
 
-string label_tree(int node, map<int, vector<int>>& rootedAdjList) {
-  
-    if (rootedAdjList[node].empty()) {
-        return "0";
+unordered_map<string, int> labelMap;  // For canonical labels
+int labelCounter = 1;                 // Counter to assign unique labels
+
+int label_tree(int node, const map<int, vector<int>>& rootedAdjList) {
+    if (rootedAdjList.at(node).empty()) {
+        return 0;  // Leaf nodes get a base label (e.g., 0)
     }
     
-   
-    vector<string> childLabels;
+    // Create a vector to store child labels
+    vector<int> childLabels;
     
-
-    for (int child : rootedAdjList[node]) {
+    // Recursively get the labels for all children
+    for (int child : rootedAdjList.at(node)) {
         childLabels.push_back(label_tree(child, rootedAdjList));
     }
-    
 
+    // Sort the child labels to ensure canonical form (or hash them in a more efficient version)
     sort(childLabels.begin(), childLabels.end());
     
-   
-    string combinedLabel = "(";
-    for (const string& label : childLabels) {
-        combinedLabel += label + ",";
+    // Convert child labels into a unique string (or hash) representation
+    string labelKey = "(";
+    for (int label : childLabels) {
+        labelKey += to_string(label) + ",";
+    }
+    labelKey += ")";
+
+    // Check if we already encountered this label structure
+    if (labelMap.find(labelKey) == labelMap.end()) {
+        labelMap[labelKey] = labelCounter++;  // Assign new label if it doesn't exist
     }
 
-    if (!childLabels.empty()) {
-        combinedLabel.pop_back(); 
-    }
-    combinedLabel += ")";
-    
-
-    return combinedLabel;
+    return labelMap[labelKey];  // Return the unique label for this node
 }
+
 
 map<int, vector<int>> root_tree(map<int, vector<int>>& adjList, int root ) {
 
@@ -186,7 +189,7 @@ int main() {
     cout << endl;
 
     map<int, vector<int>> rootedTree1, rootedTree2, rootedTree3, rootedTree4;
-    string treeLabel1, treeLabel2 , treeLabel3,treeLabel4;
+    int treeLabel1, treeLabel2 , treeLabel3,treeLabel4;
     if(centers1.size()==1 && centers2.size()==1 ){
           rootedTree1 = root_tree(adjList1, centers1[0]);
           rootedTree2 = root_tree(adjList2, centers2[0]);
