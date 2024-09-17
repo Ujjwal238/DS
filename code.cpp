@@ -12,38 +12,39 @@
 
 using namespace std;
 
-unordered_map<string, int> labelMap;  // For canonical labels
-int labelCounter = 1;                 // Counter to assign unique labels
+unordered_map<string, int> labelMap;  
+int labelCounter = 1;                 
+
+string hash_child_labels(const vector<int>& childLabels) {
+    long long hashValue = 0;
+    for (int label : childLabels) {
+        hashValue += label * 31;  // Use a prime number multiplier for hashing
+    }
+    return to_string(hashValue);  // Return hash as string (or keep as int)
+}
 
 int label_tree(int node, const map<int, vector<int>>& rootedAdjList) {
     if (rootedAdjList.at(node).empty()) {
-        return 0;  // Leaf nodes get a base label (e.g., 0)
+        return 0;  // Base case: return a fixed label for leaf nodes
     }
-    
-    // Create a vector to store child labels
+
     vector<int> childLabels;
     
-    // Recursively get the labels for all children
+    // Recursively label the children
     for (int child : rootedAdjList.at(node)) {
         childLabels.push_back(label_tree(child, rootedAdjList));
     }
-
-    // Sort the child labels to ensure canonical form (or hash them in a more efficient version)
-    sort(childLabels.begin(), childLabels.end());
     
-    // Convert child labels into a unique string (or hash) representation
-    string labelKey = "(";
-    for (int label : childLabels) {
-        labelKey += to_string(label) + ",";
-    }
-    labelKey += ")";
+    // Hash the child labels instead of sorting
+    string labelKey = hash_child_labels(childLabels);
 
-    // Check if we already encountered this label structure
+    // Assign a unique label if we haven't seen this structure before
     if (labelMap.find(labelKey) == labelMap.end()) {
-        labelMap[labelKey] = labelCounter++;  // Assign new label if it doesn't exist
+        labelMap[labelKey] = labelCounter++;
     }
 
-    return labelMap[labelKey];  // Return the unique label for this node
+    // Return the unique label for this node
+    return labelMap[labelKey];
 }
 
 
